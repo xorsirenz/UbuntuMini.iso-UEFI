@@ -9,7 +9,7 @@
                         <li>Lets copy the script into the customiso file, then make it executable. You can use whatever text editor you would like. I will be using vim in this example.<br>
                             <code>$ vim customiso.sh</code></li>
                         <br>
-                            <div class="cpy" title="Copy Code to Clipboard"><i class="icon small"></i></div><pre><code>#!/bin/bash
+                            <div class="cpy" title="Copy Code to Clipboard"><i class="icon small"></i><pre><code>#!/bin/bash
 
 set -eu
 
@@ -35,53 +35,46 @@ rm -rf ${dist_dir}*
 mv ${dist_dir}-tmp/install/hwe-netboot/ubuntu-installer/amd64/linux ${dist_dir}/linux
 mv ${dist_dir}-tmp/install/hwe-netboot/ubuntu-installer/amd64/initrd.gz ${dist_dir}/initrd.gz
 zip -r ${dist_dir}.zip ${dist_dir}
-</code></pre></div>
+</code></pre>
                         <code>$ chmod +x customiso.sh</code>
                         <li>Run the script:<br>
-                            <code>$ ./customish.sh</code></li>
+                        <code>$ ./customish.sh</code></li>
                         <li>Now if you do a <code>ls</code> you will see three new files and a two new directories. The two important files to verify are <code>ubuntu-20.04.1-legacy-server-amd64.iso</code>, <code>mini.iso</code>, and a the new directory called <code>ubuntu-20.04-netinstall</code>.</li>
                         <li>Time to verify the sha of your .iso files. to do this run the <code>sha256sum</code> command on both files:</li>
-                        <br>
-                        <div class="copy-wrapper">
-                            <div class="copy" title="Copy Code to Clipboard"><i class="icon small"></i></div><pre><code>$ sha256sum mini.iso
+                        <pre><code>$ sha256sum mini.iso
 0e79e00bf844929d40825b1f0e8634415cda195ba23bae0b041911fde4dfe018  mini.iso
 $ sha256sum ubuntu-20.04.1-legacy-server-amd64.iso 
 f11bda2f2caed8f420802b59f382c25160b114ccc665dbac9c5046e7fceaced2  ubuntu-20.04.1-legacy-server-amd64.iso
-</code></pre></div>
+</code></pre>
                         <li>Now its time to make a custom ISO using the <code>mkisofs</code> command. If you do not have the command. You can download <code>cdrtools</code> through your package manager.</li>
                         <li>What I did was run<br>
-                            <code>$ mkisofs -o ubuntu-20.04-netinstall.iso \</code><br> and this should give you a prompt to run the rest of the commands:</li>
-                        <br>
-                        <div class="copy-wrapper">
-                            <div class="copy" title="Copy Code to Clipboard"><i class="icon small"></i></div><pre><code>&gt; -b ubuntu-20.04-netinstall/isolinux.bin \
+                        <code>$ mkisofs -o ubuntu-20.04-netinstall.iso \ </code> <br> and this should give you a prompt to run the rest of the commands:</li>
+                        <pre><code>&gt; -b ubuntu-20.04-netinstall/isolinux.bin \
 &gt; -c ubuntu-20.04-netinstall/boot.cat \
 &gt; -no-emul-boot \
 &gt; -boot-load-size 4 \
 &gt; -boot-info-table -J -R -V \
 &gt; UbuntuMinimal .
-</code></pre></div>
+</code></pre>
                         <li>After completing the previous step, you should now see another file in your directory called <code>ubuntu-20.04-netinstall.iso</code>.</li>
                         <li>We now need to burn this iso onto our USB drive. Lets verify the name of our USB stick first with:</li>
-                        <br>
-                        <div class="copy-wrapper">
-                            <div class="copy" title="Copy Code to Clipboard"><i class="icon small"></i></div><pre><code>$ lsblk
+                        <pre><code>$ lsblk
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
 sda      8:0    0 931.5G  0 disk 
 ├─sda1   8:1    0     1G  0 part /boot
 ├─sda2   8:2    0    30G  0 part /
 └─sda3   8:3    0 900.5G  0 part /home
 sdb      8:16   1  14.6G  0 disk
-</code></pre></div>
+</code></pre>
                         <li>Be careful to make sure you recognize the proper block device name for your USB. In the picture above my USB is listed as <code>sdb</code>. If you are unsure what the block device name of your USB stick is called, you can run the <code>lsblk</code> command without the USB inserted in your PC and compare the differences to see what NAME is added.</li>
                         <li>Lets actually burn the ISO onto our USB now using the command <code>dd</code>.</li>
                         <br>
                         <strong>WARNING: YOU CAN DELETE YOUR OS IF YOU TYPE IN THE INCORRECT BLOCK DEVICE NAME</strong>
                         <br><br>
-                        <div class="copy-wrapper">
-                            <div class="copy" title="Copy Code to Clipboard"><i class="icon small"></i></div><pre><code>$ dd bs=4M if=ubuntu-20.04-netinstall.iso of=/dev/sdb status=progress
-</code></pre></div>
+                        <code>$ dd bs=4M if=ubuntu-20.04-netinstall.iso of=/dev/sdb status=progress
+</code>
                         <li>Once this is completed it's now time to boot your USB stick. I am going to assume you are installing REMnux onto another device. So lets plug in the USB stick into a USB port on the device you'd like to install Ubuntu on.</li>
-                        DISCLAIMER: I am going to assume that you have the knowledge about setting your boot order, and GRUB, so a few steps here will be skipped.
+                        <br><b>DISCLAIMER: I am going to assume that you have the knowledge about setting your boot order, and GRUB, so a few steps here will be skipped.</b>
                         <li>
                             When I personally plugged in my USB I was getting an error that my PC could not find a bootable device when my USB stick was set to #1 in my boot order. I seen that this was not an issue with other people trying to boot a minimal Ubuntu iso with UEFI. If you are having the same issue as me, and already have grub installed, go back into your BIOS and set GRUB as #1 in your boot order.
                         </li>
@@ -91,50 +84,17 @@ sdb      8:16   1  14.6G  0 disk
                         <li>
                             Personally I previously had Arch installed on this device so I type in <code>c</code> to get to the grub terminal. If this is the case. We will need to type in a few commands to get the Ubuntu Installer to run. First lets list our devices.
                         </li>
-                        <br>
-                        <div class="copy-wrapper">
-                            <div class="copy" title="Copy Code to Clipboard"><i class="icon small"></i></div><pre><code>grub&gt; ls
-</code></pre></div>
+                        <code>grub&gt; ls</code><br>
                         <li>Depending on your previous setup and partitions this could look a bit differnt. In my case my output of <code>ls</code> looked like this:</li>
-                        <code>(hd0) (hd1) (hd1,gpt3) (hd1,gpt2) (hd1,gpt1) (hd2)</code>
+                        <code>(hd0) (hd1) (hd1,gpt3) (hd1,gpt2) (hd1,gpt1) (hd2)</code><br>
                         <li>If you are not positive on which device is your USB, once again you can unplug your usb device. Load up the grub terminal and perform a <code>ls</code> and see what device is missing. Pay close attention to the devices listed with <code>,gptX</code> in them as they can give you a hint. For example if I remove my USB and perform a <code>ls</code> my output would look like this:</li>
-                        <code>(hd0) (hd0,gpt3) (hd0,gpt2) (hd0,gpt1) (hd1)</code>
-                        <li>As you can see the <code>hdX</code> number changes based on the order its listed and not the actual device itself. I can see that when my USB stick in inserted it is listed as <code>(hd0)</code> since the <code>hdX,gptX)</code> devices change numbers, and the trailing (hdX) also changes numbers. So now lets boot into our Ubuntu install:</li>
-                        <br>
-                        <div class="copy-wrapper">
-                            <div class="copy" title="Copy Code to Clipboard"><i class="icon small"></i></div><pre><code>grub&gt; set root=(hd0)
+                        <code>(hd0) (hd0,gpt3) (hd0,gpt2) (hd0,gpt1) (hd1)</code><br>
+                        <li>As you can see the <code>hdX</code> number changes based on the order its listed and not the actual device itself. I can see that when my USB stick in inserted it is listed as <code>(hd0)</code> since the <code>hdX,gptX)</code> devices change numbers, and the trailing (hdX) also changes numbers. So now lets boot into our Ubuntu install:</li><pre><code>grub&gt; set root=(hd0)
 grub&gt; linux /ubuntu-20.04-netinstall/linux
 grub&gt; initrd /ubuntu-20.04-netinstall/initrd.gz
 grub&gt; boot
-</code></pre></div>
+</code><br></pre>
                         <li>This will bring up the Ubuntu Installer. To finish the remnux install I will direct you to the <a target="_blank" href="http://Remnux.org">Remnux.org</a> website as they already have a detailed writeup on the correct steps to take.<br>
                             <a target="_blank" href="https://docs.remnux.org/install-distro/install-from-scratch">Remnux Docs</a></li>
-                    </body>
                     </p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Contact-->
-    <section class="contact-section bg-black">
-        <div class="container px-4 px-lg-5">
-            <div class="social d-flex justify-content-center">
-                <a class="mx-2" href="https://twitter.com/madisoncraigx3"><i class="fab fa-twitter"></i></a>
-                <a class="mx-2" href="https://github.com/madison-craig"><i class="fab fa-github"></i></a>
-                <a class="mx-2" href="https://instagram.com/madison_craig"><i class="fab fa-instagram"></i></a>
-                <a class="mx-2" href="mailto:madisoncraig@protonmail.com"><i class="fas fa-envelope"></i></a>
-            </div>
-        </div>
-    </section>
-    <!-- Footer-->
-    <footer class="footer bg-black small text-center text-white-50">
-        <div class="container px-4 px-lg-5">Madison Craig &copy; 2023</div>
-    </footer>
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-    <script src="../js/scripts.js"></script>
-    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-</body>
-
-</html>
+##### Madison Craig &copy; 2023
