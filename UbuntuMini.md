@@ -92,8 +92,7 @@ sdb      8:16   1  14.6G  0 disk
                         <li>As you can see the <code>hdX</code> number changes based on the order its listed and not the actual device itself. I can see that when my USB stick in inserted it is listed as <code>(hd0)</code> since the <code>hdX,gptX)</code> devices change numbers, and the trailing (hdX) also changes numbers. So now lets boot into our Ubuntu install:</li><pre><code>grub&gt; set root=(hd0)
 grub&gt; linux /ubuntu-20.04-netinstall/linux
 grub&gt; initrd /ubuntu-20.04-netinstall/initrd.gz
-grub&gt; boot
-</code><br></pre>
+grub&gt; boot</code></pre>
                         <li>This will bring up the Ubuntu Installer. To finish the remnux install I will direct you to the <a target="_blank" href="http://Remnux.org">Remnux.org</a> website as they already have a detailed writeup on the correct steps to take.<br>
                             <a target="_blank" href="https://docs.remnux.org/install-distro/install-from-scratch">Remnux Docs</a></li>
                     </p>
