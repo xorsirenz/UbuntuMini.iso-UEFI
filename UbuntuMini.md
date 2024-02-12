@@ -96,4 +96,4 @@ grub&gt; boot</code></pre>
                         <li>This will bring up the Ubuntu Installer. To finish the remnux install I will direct you to the <a target="_blank" href="http://Remnux.org">Remnux.org</a> website as they already have a detailed writeup on the correct steps to take.<br>
                             <a target="_blank" href="https://docs.remnux.org/install-distro/install-from-scratch">Remnux Docs</a></li>
                     </p>
-##### bootlegwifi &copy; 2023
+##### xorsirenz &copy; 2023
